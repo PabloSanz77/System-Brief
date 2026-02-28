@@ -1,0 +1,40 @@
+graph TD
+
+%% ===== ACTORES EXTERNOS =====
+subgraph Externos
+    Cliente
+    Administrador
+    Cocina
+    Repartidor
+    ServicioPagos["Servicio Externo de Pagos"]
+end
+
+%% ===== SISTEMA FOODFAST =====
+subgraph FoodFast
+    Autenticacion
+    GestionPedidos
+    AsignacionCocina
+    GestionEntregas
+    BaseDatos[(Base de Datos)]
+end
+
+%% ===== AUTENTICACIÓN =====
+Cliente -->|Inicia sesión / Registro| Autenticacion
+Administrador -->|Gestiona usuarios| Autenticacion
+Autenticacion -->|Guarda / Consulta datos| BaseDatos
+
+%% ===== GESTIÓN DE PEDIDOS =====
+Cliente -->|Crea pedido| GestionPedidos
+GestionPedidos -->|Guarda pedido| BaseDatos
+Administrador -->|Supervisa pedidos| GestionPedidos
+
+%% ===== FLUJO COCINA =====
+GestionPedidos -->|Envía pedido a cocina| AsignacionCocina
+Cocina -->|Actualiza estado| GestionPedidos
+
+%% ===== ENTREGAS =====
+GestionPedidos -->|Pedido listo| GestionEntregas
+GestionEntregas -->|Asigna entrega| Repartidor
+
+%% ===== PAGOS =====
+GestionPedidos -->|Procesa pago| ServicioPagos
